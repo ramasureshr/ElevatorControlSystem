@@ -12,6 +12,12 @@ namespace ElevatorControlSystem.Features
         public int CurrentFloor = 1;
         private int topfloor;
         public ElevatorStatus Status = ElevatorStatus.STOPPED;
+
+        public ElevatorControl(int NumberOfFloors = 10)
+        {
+            floorReady = new bool[NumberOfFloors + 1];
+            topfloor = NumberOfFloors;
+        }
         public void GoDown(int floor)
         {
             for (int i = CurrentFloor; i >= 1; i--)
@@ -40,9 +46,9 @@ namespace ElevatorControlSystem.Features
             Console.WriteLine("Waiting..");
         }
 
-        public void StayPut()
+        public string StayPut(int cFloor)
         {
-            throw new NotImplementedException();
+            return $"This is Current Floor:{cFloor}";
         }
 
         public void Stop(int floor)
@@ -53,12 +59,13 @@ namespace ElevatorControlSystem.Features
             Console.WriteLine("Stopped at floor {0}", floor);
         }
 
-        public void FloorPress(int floor)
+        public string FloorPress(int floor)
         {
+            string LiftMovement = $"Current Floor:{CurrentFloor},Requested Floor is {floor};LiftGoing";
             if (floor > topfloor)
             {
-                Console.WriteLine("We only have {0} floors", topfloor);
-                return;
+
+                return $"We only have {topfloor} floors";
             }
 
             floorReady[floor] = true;
@@ -67,25 +74,37 @@ namespace ElevatorControlSystem.Features
             {
 
                 case ElevatorStatus.DOWN:
-                    Descend(floor);
+                    GoDown(floor);
                     break;
 
                 case ElevatorStatus.STOPPED:
                     if (CurrentFloor < floor)
-                        Ascend(floor);
+                    {
+                        LiftMovement = LiftMovement + " UP";
+                        GoUp(floor);
+                    }
                     else if (CurrentFloor == floor)
-                        StayPut();
+                    {
+                        LiftMovement = LiftMovement + "is not Going Anywhere";
+                        StayPut(CurrentFloor);
+                    }
                     else
-                        Descend(floor);
+                    {
+                        LiftMovement = LiftMovement + " Down";
+                        GoDown(floor);
+                    }
                     break;
 
                 case ElevatorStatus.UP:
-                    Ascend(floor);
+                    GoUp(floor);
                     break;
 
                 default:
                     break;
             }
 
+            return LiftMovement + " Elevator now is at Request Floor:"+CurrentFloor;
+
         }
     }
+}

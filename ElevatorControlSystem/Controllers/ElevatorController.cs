@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ElevatorControlSystem.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -12,6 +13,11 @@ namespace ElevatorControlSystem.Controllers
     [ApiController]
     public class ElevatorController : ControllerBase
     {
+        private readonly IElevatorControl _elevatorControl;
+        public ElevatorController(IElevatorControl elevatorControl)
+        {
+            _elevatorControl = elevatorControl;
+        }
         // GET: api/<ElevatorController>
         [HttpGet]
         public IEnumerable<string> Get()
@@ -23,7 +29,7 @@ namespace ElevatorControlSystem.Controllers
         [HttpGet("{id}")]
         public string Get(int id)
         {
-            return "value";
+           return _elevatorControl.FloorPress(id);
         }
 
         // POST api/<ElevatorController>

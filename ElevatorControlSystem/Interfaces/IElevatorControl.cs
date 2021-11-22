@@ -10,6 +10,7 @@ namespace ElevatorControlSystem.Interfaces
         public void Stop(int floor);
         public void GoDown(int floor);
         public void GoUp(int floor);
-        public void StayPut();
+        public string StayPut(int cFloor);
+        public string FloorPress(int floor);
     }
 }
